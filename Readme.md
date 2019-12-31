@@ -75,6 +75,14 @@ _Warning_: all somatic R scripts treat the first bam file to be the matched norm
 
 # FAQ
 
+### How do I run GRIDSS on multiple samples?
+
+Just specify multiple BAMs on the command line. GRIDSS will perform joint calling and provide a per-BAM breakdown of support.
+
+### How do I tell GRIDSS multiple BAMs are from the same sample?
+
+Use the `--labels` command line option. Eg: `--labels sample1,sample1,sample2 sample1_library1.bam sample1_library2.bam sample2.bam`
+
 ### Why are there ALT alleles with `.` in the output?
 
 This is the [VCF](https://samtools.github.io/hts-specs/VCFv4.2.pdf) notation for single breakend variant calls. See section 5.4.9 of the specifications document. These calls indicate that a breakpoint was found at this location but the partner location could not be unambiguously determined.
@@ -109,6 +117,14 @@ java -Xmx6g -cp $GRIDSS_JAR gridss.AnnotateUntemplatedSequence \
 				OUTPUT=$annotated_gridss_output \
 				WORKER_THREADS=$threads
 ```
+
+This will add a `BEALN` INFO field to the VCF that contains the potential alignment locations in $viralreference for single breakend/breakpoint inserted sequences.
+
+Note: Be aware that low complexity sequences (e.g poly-A) can match viral sequences. This can be mitigated by either first aligning to the human reference (as done by `gridss.sh`), or making a human+viral reference sequence and running `AnnotateUntemplatedSequence` against that.
+
+### What does `gridss_somatic_filter.R` actually do?
+
+See documentation at https://github.com/PapenfussLab/gridss/wiki/Somatic-Filtering
 
 ### How do I create the panel of normals required by `gridss_somatic_filter.R`?
 
